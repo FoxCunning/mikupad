@@ -3735,6 +3735,11 @@ function LogitBiasModal({ isOpen, closeModal, logitBias, setLogitBias, logitBias
 			You can bias IDs directly in a comma separated list, wrapped in '/'. Example: /382,1449,1802/
 
 			Different models might tokenize words differently. Always Re-Tokenize your biases when switching models by pressing the '+' button again for every entry.">
+			<div class="hbox">
+				<button>Import</button>
+				<button>Export</button>
+				<button>Clear</button>
+			</div>
 			${isOpen 
 				&& html`
 					<div className="hbox-flex logitBiasContainer">
