@@ -3626,6 +3626,16 @@ function LogitBiasModal({ isOpen, closeModal, logitBias, setLogitBias, logitBias
 			return;
 		}
 	};
+	
+	const logitBiasExport = () => {
+		//const sessionObj = { ...sessionStorage.sessions[sessionStorage.selectedSession] };
+		//for (const [key, value] of Object.entries(sessionObj)) {
+			// This is done for compatibility with localStorage export files.
+		//	sessionObj[key] = JSON.stringify(value);
+		//}
+		//exportText(`${sessionStorage.getProperty('name')}.json`, JSON.stringify(sessionObj));
+		exportText("logit_bias.json", JSON.stringify(logitBias));
+	};
 
 	const clamp = (num, min = -Infinity, max = Infinity) => {
 		return Math.min(Math.max(num, min), max);
@@ -3736,9 +3746,9 @@ function LogitBiasModal({ isOpen, closeModal, logitBias, setLogitBias, logitBias
 
 			Different models might tokenize words differently. Always Re-Tokenize your biases when switching models by pressing the '+' button again for every entry.">
 			<div class="hbox">
-				<button>Import</button>
-				<button>Export</button>
-				<button>Clear</button>
+				<button disabled=${!!cancel}>Import</button>
+				<button disabled=${!!cancel} onClick=${() => logitBiasExport()}>Export</button>
+				<button disabled=${!!cancel}>Clear</button>
 			</div>
 			${isOpen 
 				&& html`
