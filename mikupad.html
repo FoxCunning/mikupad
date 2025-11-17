@@ -3626,15 +3626,50 @@ function LogitBiasModal({ isOpen, closeModal, logitBias, setLogitBias, logitBias
 			return;
 		}
 	};
-	
+
+	const logitBiasImport = () => {
+		const fileInput = document.createElement("input");
+		fileInput.type = 'file';
+		fileInput.multiple = true;
+		fileInput.style.display = 'none';
+		fileInput.onchange = async (e) => {
+			const files = e.target.files;
+			if (files.length === 0)
+				return;
+
+			const sortedFiles = Array.from(files).sort((a, b) => a.lastModified - b.lastModified);
+
+			const reader = new FileReader();
+
+			for (const file of sortedFiles) {
+				await new Promise((resolve, reject) => {
+					reader.onload = async (e) => {
+						logitBias = JSON.parse(e.target.result);
+						var key;
+						for (key in logitBias.bias) {
+ 						  logitBiasAdd(logitBias.bias[key].power.toString(), key);
+						}
+						resolve();
+					};
+					reader.onerror = (e) => {
+						reject(e);
+					};
+					reader.readAsText(file);
+				});
+			}
+		};
+		document.body.appendChild(fileInput);
+		fileInput.click();
+		document.body.removeChild(fileInput);
+	};
+
 	const logitBiasExport = () => {
-		//const sessionObj = { ...sessionStorage.sessions[sessionStorage.selectedSession] };
-		//for (const [key, value] of Object.entries(sessionObj)) {
-			// This is done for compatibility with localStorage export files.
-		//	sessionObj[key] = JSON.stringify(value);
-		//}
-		//exportText(`${sessionStorage.getProperty('name')}.json`, JSON.stringify(sessionObj));
-		exportText("logit_bias.json", JSON.stringify(logitBias));
+		exportText("logits.bias", JSON.stringify(logitBias));
+	};
+
+	const logitBiasClear = () => {
+		logitBias.bias = {};
+		setLogitBiasSorted([]);
 	};
 
 	const clamp = (num, min = -Infinity, max = Infinity) => {
@@ -3746,9 +3781,9 @@ function LogitBiasModal({ isOpen, closeModal, logitBias, setLogitBias, logitBias
 
 			Different models might tokenize words differently. Always Re-Tokenize your biases when switching models by pressing the '+' button again for every entry.">
 			<div class="hbox">
-				<button disabled=${!!cancel}>Import</button>
+				<button disabled=${!!cancel} onClick=${() => logitBiasImport()}>Import</button>
 				<button disabled=${!!cancel} onClick=${() => logitBiasExport()}>Export</button>
-				<button disabled=${!!cancel}>Clear</button>
+				<button disabled=${!!cancel} onClick=${() => logitBiasClear()}>Clear</button>
 			</div>
 			${isOpen 
 				&& html`
