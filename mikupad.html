@@ -3647,7 +3647,7 @@ function LogitBiasModal({ isOpen, closeModal, logitBias, setLogitBias, logitBias
 						logitBias = JSON.parse(e.target.result);
 						var key;
 						for (key in logitBias.bias) {
- 						  logitBiasAdd(logitBias.bias[key].power.toString(), key);
+ 							await logitBiasAdd(logitBias.bias[key].power.toString(), key);
 						}
 						resolve();
 					};
