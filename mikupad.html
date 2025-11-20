@@ -3663,7 +3663,7 @@ function LogitBiasModal({ isOpen, closeModal, logitBias, setLogitBias, logitBias
 								}
 							}
 						} else {	// Mikupad format
-							logitBias = data;
+							logitBias.bias = Object.assign({}, logitBias.bias, data.bias);
 							await setLogitBias((prevLogitBias) => ({
 								...prevLogitBias,
 								bias: logitBias.bias
